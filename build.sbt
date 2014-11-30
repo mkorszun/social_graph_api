@@ -2,7 +2,7 @@ import com.typesafe.sbt.SbtStartScript
 
 seq(SbtStartScript.startScriptForClassesSettings: _*)
 
-name := """social_graph_api"""
+name := """social_graph_api """
 
 version := "1.0"
 
@@ -11,6 +11,13 @@ scalaVersion := "2.10.0"
 resolvers += "spray repo" at "http://repo.spray.io"
 
 resolvers += "spray nightlies" at "http://nightlies.spray.io"
+
+resolvers += "Neo4j Scala Repo" at "http://m2.neo4j.org/content/repositories/releases"
+
+resolvers ++= Seq(
+    "anormcypher" at "http://repo.anormcypher.org/",
+    "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases/"
+)
 
 libraryDependencies ++= Seq(
   "com.typesafe.akka"  %% "akka-actor"       % "2.2.3",
@@ -27,6 +34,12 @@ libraryDependencies ++= Seq(
 )
 
 libraryDependencies += "org.mongodb" %% "casbah" % "2.7.2"
+
+libraryDependencies += "eu.fakod" % "neo4j-scala_2.10" % "0.3.0"
+
+libraryDependencies ++= Seq(
+    "org.anormcypher" %% "anormcypher" % "0.4.4"
+)
 
 scalacOptions ++= Seq(
   "-unchecked",

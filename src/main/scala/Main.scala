@@ -1,9 +1,11 @@
-import model.{CommonFriends, Distance}
+import db.{PathNotFoundException, DBService}
+import model.{CommonFriends, Distance, Error}
 import spray.routing.SimpleRoutingApp
 import akka.actor._
 
 object Main extends App with SimpleRoutingApp {
 
+    val service: DBService = new DBService()
     implicit val system = ActorSystem("my-system")
 
     startServer(interface = "0.0.0.0", port = System.getenv("PORT").toInt) {
@@ -18,9 +20,18 @@ object Main extends App with SimpleRoutingApp {
                     pathEnd {
                         get {
                             import format.DistanceJsonFormat._
+                            import format.ErrorJsonFormat._
                             import spray.json._
 
-                            complete(Distance(3, Array(1, 2, 3)).toJson.toString())
+                            try {
+                                val nodes: List[Int] = service.shortestPath(a, b)
+                                complete(Distance(nodes.size, nodes).toJson.toString())
+                            } catch {
+                                case e: PathNotFoundException => complete(404,
+                                    Error(e.getMessage).toJson.toString())
+                                case e: Exception => complete(500,
+                                    Error("Internal server error").toJson.toString())
+                            }
                         }
                     }
             } ~
@@ -29,12 +40,18 @@ object Main extends App with SimpleRoutingApp {
                     pathEnd {
                         get {
                             import format.CommonFriendsJsonFormat._
+                            import format.ErrorJsonFormat._
                             import spray.json._
 
-                            complete(CommonFriends(Array(1, 2, 3)).toJson.toString())
+                            try {
+                                val nodes: List[Int] = List(1, 2, 3)
+                                complete(CommonFriends(nodes).toJson.toString())
+                            } catch {
+                                case e: Exception => complete(500,
+                                    Error("Internal server error").toJson.toString())
+                            }
                         }
                     }
             }
     }
 }
-
