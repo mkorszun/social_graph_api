@@ -7,7 +7,7 @@ class PathNotFoundException(msg: String) extends RuntimeException(msg)
 
 class DBService {
 
-    //implicit val connection = Neo4jREST.setURL("http://54.245.119.57:7474/db/data/")
+    implicit val connection = Neo4jREST.setURL(System.getenv("NEO_URL"))
 
     /**
      * Find shortest path between two nodes
