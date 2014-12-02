@@ -33,10 +33,6 @@ libraryDependencies ++= Seq(
 "test->default"
 )
 
-libraryDependencies += "org.mongodb" %% "casbah" % "2.7.2"
-
-libraryDependencies += "eu.fakod" % "neo4j-scala_2.10" % "0.3.0"
-
 libraryDependencies ++= Seq(
     "org.anormcypher" %% "anormcypher" % "0.4.4"
 )
