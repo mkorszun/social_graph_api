@@ -70,3 +70,12 @@ MATCH (a:Person { id: ID1 }),(b:Person { id: ID2 }), p = allShortestPaths((a)-[*
 
 ### Application is deployed on cloudControl PaaS:
 `http://socialgraphapi.cloudcontrolled.com/`
+
+### Discussion
+1. [Algorithm used by Neo4j](https://github.com/neo4j/neo4j/tree/master/community/graph-algo/src/main/java/org/neo4j/graphalgo/impl): single shortest path (BFS/Dijkstra), multiple shortest paths (FloydWarshall - assumption). Social graps are expected to be rather sparse in general and dense locally, that is why finding most optimal algorithm is challenging. Stronly believe that social network science ([clique](http://en.wikipedia.org/wiki/Clique_(graph_theory)), [network communities](http://en.wikipedia.org/wiki/Community_structure)) + heuristic needs to be applied here for the most efficient solution.
+2. Neo4j single instance data capacity: ~34 billion nodes / ~34 billion edges - so it can handle quite big data volumes. Graph sharding with [communities detection](http://horicky.blogspot.de/2012/11/detecting-communities-in-social-graph.html) could be considered for the scaling/clustering purposes.
+3. Possible tests:
+	* Test api with mocked db responses - validate result serialization and error handling
+	* Test Neo4j queries using in memory database with loaded fixtures
+	* Use Neo4j [test libraries](http://neo4j.com/docs/stable/tutorials-java-unit-testing.html)
+	* Create docker container with provisioned Neo4j instance and API application together with test data. Use for integration and load tests.
